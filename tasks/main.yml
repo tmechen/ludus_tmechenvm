@@ -55,3 +55,7 @@
 - name: Reboot after disabling Defender
   ansible.windows.win_reboot:
   when: tamper_protection_enabled
+
+- name: Install Eric Zimmermann Tools
+  ansible.builtin.script:
+    cmd: install_zimmermann.ps1
