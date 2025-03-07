@@ -9,11 +9,7 @@ if (!(Test-Path -Path $installPath)) {
 
 Invoke-WebRequest -Uri $zipUrl -OutFile $zipFile
 Expand-Archive -Path $zipFile -DestinationPath $installPath -Force
-if (Test-Path -Path $installerScript) {
-    PowerShell -ExecutionPolicy Bypass -File $installerScript
-}
-Remove-Item $zipFile -Force
-Remove-Item $installerScript -Force
+PowerShell -ExecutionPolicy Bypass -File $installerScript
 $envPath = [System.Environment]::GetEnvironmentVariable("Path", [System.EnvironmentVariableTarget]::Machine)
 if ($envPath -notlike "*$net6Path*") {
     $newPath = "$envPath;$net6Path"
