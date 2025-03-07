@@ -32,7 +32,7 @@ ludus:
     ram_gb: 8
     cpus: 8
     windows:
-      install_additional_tools: true
+      sysprep: false
     roles:
       - ludus_tmechenvm
 ```
