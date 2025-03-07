@@ -3,6 +3,15 @@
 An Ansible Role that installs my tools on Windows 2019 server hosts.
 Uses code from [privacy.sexy](https://privacy.sexy) to disable Defender and Tamper Protection.
 
+## Install
+
+```shell
+# Clone Repo to current folder
+git clone https://github.com/tmechen/ludus_tmechenvm.git
+# Add from a local directory
+ludus ansible role add -d ./ludus_tmechenvm
+```
+
 ## Role Variables
 
 ## Dependencies
@@ -25,7 +34,7 @@ ludus:
     windows:
       install_additional_tools: true
     roles:
-      - tmechen.ludus_tmechenvm
+      - ludus_tmechenvm
 ```
 
 ## License
