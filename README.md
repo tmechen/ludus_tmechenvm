@@ -10,6 +10,8 @@ Uses code from [privacy.sexy](https://privacy.sexy) to disable Defender and Tamp
 git clone https://github.com/tmechen/ludus_tmechenvm.git
 # Add from a local directory
 ludus ansible role add -d ./ludus_tmechenvm
+# Update
+ludus ansible role rm ludus_tmechenvm && cd ./ludus_tmechenvm/ && git pull && cd .. && ludus ansible role add -d ludus_tmechenvm/
 ```
 
 ## Role Variables
