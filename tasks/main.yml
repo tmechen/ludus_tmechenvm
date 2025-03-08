@@ -36,7 +36,7 @@
     ludus_download_file_host_path: "C:\\ludus\\tmechen"
 
 - name: Unzip Zimmerman Tools
-  ansible.windows.win_unzip:
+  community.windows.win_unzip:
     src: C:\ludus\Get-ZimmermanTools.zip
     dest: C:\ludus
     remote_src: yes
