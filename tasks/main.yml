@@ -53,6 +53,6 @@
     executable: powershell.exe
 
 - name: Create a shortcut for EricZimmermann folder
-  ansible.windows.win_shortcut:
+  community.windows.win_shortcut:
     src: C:\Tools\EricZimmermann\net6
     dest: C:\Users\localuser\Desktop\Tools\Forensic\EricZimmermann.lnk
