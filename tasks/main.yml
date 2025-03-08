@@ -18,15 +18,6 @@
   args:
     creates: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36
 
-- name: Verify .NET installation
-  ansible.windows.win_command: "C:\\Program Files\\dotnet\\dotnet.exe --list-runtimes"
-  register: dotnet_version
-  changed_when: false
-
-- name: Display installed .NET runtimes
-  ansible.builtin.debug:
-    msg: "{{ dotnet_version.stdout_lines }}"
-
 - name: Download Zimmermann Tools Installer Archive
   ansible.builtin.include_tasks:
     file: download_file.yml
