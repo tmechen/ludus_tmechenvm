@@ -1,32 +1,58 @@
 ---
-- name: Disable Windows Updates
-  ansible.builtin.script:
-    cmd: disable_updates.ps1
+- name: Ensure the target directory exists
+  ansible.windows.win_file:
+    path: C:\ludus\tmechen
+    state: directory
 
-- name: Disable Defender 1
-  ansible.windows.win_powershell:
-    script: |
-      Add-MpPreference -ExclusionPath 'C:\'
+- name: Download .NET Installer
+  ansible.builtin.include_tasks:
+    file: download_file.yml
+  vars:
+    ludus_download_file_name: dotnet-runtime-6.0.36-win-x64.exe
+    ludus_download_file_url: https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.exe
+    ludus_download_file_host_path: "C:\\ludus\\tmechen"
 
-- name: Execute PowerShell script to check tamper protection status
+- name: Install .NET 6.0.36 Runtime
+  ansible.windows.win_command: 
+    cmd.exe /c C:\ludus\tmechen\dotnet-runtime-6.0.36-win-x64.exe /quiet /norestart
+  args:
+    creates: C:\Program Files\dotnet\shared\Microsoft.NETCore.App\6.0.36
+
+- name: Verify .NET installation
+  ansible.windows.win_command: "C:\\Program Files\\dotnet\\dotnet.exe --list-runtimes"
+  register: dotnet_version
+  changed_when: false
+
+- name: Display installed .NET runtimes
+  ansible.builtin.debug:
+    msg: "{{ dotnet_version.stdout_lines }}"
+
+- name: Download Zimmermann Tools Installer Archive
+  ansible.builtin.include_tasks:
+    file: download_file.yml
+  vars:
+    ludus_download_file_name: Get-ZimmermanTools.zip
+    ludus_download_file_url: https://download.ericzimmermanstools.com/Get-ZimmermanTools.zip
+    ludus_download_file_host_path: "C:\\ludus\\tmechen"
+
+- name: Unzip Zimmerman Tools
+  ansible.windows.win_unzip:
+    src: C:\ludus\Get-ZimmermanTools.zip
+    dest: C:\ludus
+    remote_src: yes
+
+- name: Ensure the target directory exists
+  ansible.windows.win_file:
+    path: C:\Tools\EricZimmermann
+    state: directory
+
+- name: Execute Zimmerman Tools PowerShell script
   ansible.windows.win_shell: |
-    (Get-MpComputerStatus).IsTamperProtected
-  register: tamper_protection_result
+    powershell.exe -ExecutionPolicy Bypass -File C:\ludus\Get-ZimmermanTools.ps1 -Dest C:\Tools\EricZimmermann
+  args:
+    executable: powershell.exe
 
-- name: Set fact based on tamper protection status
-  ansible.builtin.set_fact:
-    tamper_protection_enabled: "{{ true if 'True' in tamper_protection_result.stdout else false }}"
-
-- name: Disable Defender 2
-  ansible.builtin.script:
-    cmd: disable_defender.bat
-  register: disable_defender
-  when: tamper_protection_enabled
-
-- name: Reboot after disabling Defender
-  ansible.windows.win_reboot:
-  when: tamper_protection_enabled
-
-- name: Install Eric Zimmermann Tools
-  ansible.builtin.script:
-    cmd: install_zimmermann.ps1
+- name: Create a shortcut for EricZimmermann folder
+  ansible.windows.win_shortcut:
+    src: C:\Tools\EricZimmermann\net6
+    dest: C:\Users\localuser\Desktop\Tools\Forensic\EricZimmermann.lnk

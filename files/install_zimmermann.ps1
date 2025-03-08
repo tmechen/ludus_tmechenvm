@@ -27,3 +27,6 @@ if ($envPath -notlike "*$net6Path*") {
 }
 Remove-Item $installerScript -Force
 Remove-Item "$installPath\!!!RemoteFileDetails.csv" -Force
+
+
+C:\Tools\EricZimmermann\net6
