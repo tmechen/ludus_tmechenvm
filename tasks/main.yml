@@ -47,3 +47,23 @@
   community.windows.win_shortcut:
     src: C:\Tools\EricZimmermann\net6
     dest: C:\Users\localuser\Desktop\Tools\Forensic\EricZimmermann.lnk
+
+- name: Download Hayabusa Archive
+  ansible.builtin.include_tasks:
+    file: download_file.yml
+  vars:
+    ludus_download_file_name: Get-ZimmermanTools.zip
+    ludus_download_file_url: https://github.com/Yamato-Security/hayabusa/releases/download/v3.1.0/hayabusa-3.1.0-win-x64.zip
+    ludus_download_file_host_path: "C:\\ludus\\tmechen"
+
+- name: Unzip Hayabusa
+  community.windows.win_unzip:
+    src: C:\ludus\tmechen\hayabusa-3.1.0-win-x64.zip
+    dest: C:\Tools\hayabusa-3.1.0-win-x64
+    remote_src: yes
+
+- name: Ensure that ZimmermannTools and Hayabusa are in path
+  ansible.windows.win_path:
+    elements:
+      - 'C:\Tools\EricZimmermann\net6'
+      - 'C:\Tools\hayabusa-3.1.0-win-x64'
